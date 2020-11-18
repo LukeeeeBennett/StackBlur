@@ -78,11 +78,13 @@
    * @param {string|HTMLCanvasElement} canvas
    * @param {Float} radius
    * @param {boolean} blurAlphaChannel
-   * @param {boolean} useOffsetWidth
+   * @param {boolean} useOffset
+   * @param {boolean} staticWidth
+   * @param {boolean} staticHeight
    * @returns {undefined}
    */
 
-  function processImage(img, canvas, radius, blurAlphaChannel, useOffsetWidth) {
+  function processImage(img, canvas, radius, blurAlphaChannel, useOffset, staticWidth, staticHeight) {
     if (typeof img === 'string') {
       img = document.getElementById(img);
     }
@@ -91,9 +93,11 @@
       return;
     }
 
-    var dimensionType = useOffsetWidth ? 'offset' : 'natural';
-    var w = img[dimensionType + 'Width'];
-    var h = img[dimensionType + 'Height'];
+    var w = staticWidth;
+    var h = staticHeight;
+    var dimensionType = useOffset ? 'offset' : 'natural';
+    w = w || img[dimensionType + 'Width'];
+    h = h || img[dimensionType + 'Height'];
 
     if (typeof canvas === 'string') {
       canvas = document.getElementById(canvas);
@@ -103,8 +107,8 @@
       return;
     }
 
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
+    canvas.style.width = staticWidth ? w : w + 'px';
+    canvas.style.height = staticHeight ? h : h + 'px';
     canvas.width = w;
     canvas.height = h;
     var context = canvas.getContext('2d');
